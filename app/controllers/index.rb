@@ -1,3 +1,5 @@
+require 'bcrypt'
+
 get '/' do
   # render home page
   @users = User.all
@@ -56,3 +58,27 @@ post '/users' do
     erb :sign_up
   end
 end
+
+get 'user/:id' do
+  @user = User.find(params[:user_id])
+  @user_proficiencies = @user.proficiencies
+  erb :userpage
+end
+
+#----------- PROFICIENCIES -----------
+
+post 'skill/:skills_id' do
+  @skills_id = params[:skills_id]
+  @user_id = User.find(session[:id]).id
+  @formal = params[:formal]
+  Proficiency.create(user: params[:user], skill: params[:skill])
+  redirect '/'
+end
+
+get 'skill/:user_id' do
+  @user = User.find(params[:user_id])
+  @user_skills = @user.skills
+  erb :skillspage
+end
+
+
